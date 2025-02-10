@@ -18,7 +18,7 @@ const TableViewToggleButton = ({
       <div className='flex flex-1 justify-end'>
         <Button
           type='button'
-          variant={!tableView ? 'default' : 'outline'}
+          variant={tableView ? 'default' : 'outline'}
           onClick={() => setTableView(false)}
           className='rounded-r-none'
         >
@@ -26,7 +26,7 @@ const TableViewToggleButton = ({
         </Button>
         <Button
           type='button'
-          variant={tableView ? 'default' : 'outline'}
+          variant={!tableView ? 'default' : 'outline'}
           onClick={() => setTableView(true)}
           className='rounded-l-none'
         >
