@@ -19,7 +19,7 @@ const TableViewToggleButton = ({
         <Button
           type='button'
           variant={tableView ? 'default' : 'outline'}
-          onClick={() => setTableView(false)}
+          onClick={() => setTableView(true)}
           className='rounded-r-none'
         >
           <GalleryVerticalEnd className='h-4 w-4' />
@@ -27,7 +27,7 @@ const TableViewToggleButton = ({
         <Button
           type='button'
           variant={!tableView ? 'default' : 'outline'}
-          onClick={() => setTableView(true)}
+          onClick={() => setTableView(false)}
           className='rounded-l-none'
         >
           <TableIcon className='h-4 w-4' />
