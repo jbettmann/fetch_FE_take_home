@@ -1,42 +1,70 @@
 import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
-import GithubProvider from 'next-auth/providers/github';
+import { toast } from 'sonner';
 
 const authConfig = {
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID ?? '',
-      clientSecret: process.env.GITHUB_SECRET ?? ''
-    }),
     CredentialProvider({
       credentials: {
+        name: {
+          type: 'name'
+        },
         email: {
           type: 'email'
-        },
-        password: {
-          type: 'password'
         }
       },
       async authorize(credentials, req) {
         const user = {
-          id: '1',
-          name: 'John',
+          name: credentials?.name as string,
           email: credentials?.email as string
         };
+        console.log('user', user);
         if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
+          try {
+            const res = await fetch(
+              process.env.NEXT_PUBLIC_API_URL + '/auth/login',
+              {
+                method: 'POST',
+                body: JSON.stringify(user),
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+              }
+            );
+            console.log('res', res);
+            if (res.ok) {
+              return user;
+            }
 
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+            console.error('Login failed:', await res.text());
+            throw new Error('Invalid credentials.');
+          } catch (error) {
+            console.error('Authorize Error:', error);
+            throw new Error('Login failed. Please check your credentials.');
+          }
         }
+        return null;
       }
     })
   ],
+  secret: process.env.SECRET,
   pages: {
     signIn: '/' //sigin page
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.name = user.name;
+        token.email = user.email;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+      }
+      return session;
+    }
   }
 } satisfies NextAuthConfig;
 

@@ -41,8 +41,9 @@ import {
   LogOut
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
+import { signOut as actionSignOut } from '@/services/auth/signOut';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 
@@ -53,9 +54,22 @@ export const company = {
 };
 
 export default function AppSidebar() {
-  const { data: session } = useSession();
+  const session = {
+    user: {
+      name: 'John Doe',
+      email: 'john.doe@gamil.com',
+      image: ' https://i.prntscr.com/4j4x6vQqQYy3.jpg'
+    }
+  };
+  const router = useRouter();
+
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
+
+  const handleSignOut = async () => {
+    await actionSignOut();
+    router.push('/');
+  };
 
   return (
     <Sidebar collapsible='icon'>
@@ -205,7 +219,7 @@ export default function AppSidebar() {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()}>
+                <DropdownMenuItem onClick={() => handleSignOut()}>
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

@@ -23,13 +23,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
   return (
     <html lang='en' className={`${lato.className}`} suppressHydrationWarning>
       <body className={'overflow-hidden'}>
         <NextTopLoader showSpinner={false} />
         <NuqsAdapter>
-          <Providers session={session}>
+          <Providers>
             <Toaster />
             {children}
           </Providers>

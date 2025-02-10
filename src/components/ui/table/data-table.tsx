@@ -16,6 +16,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import { useDogTableFilters } from '@/features/products/components/dog-tables/use-dog-filter';
 import {
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon
@@ -30,37 +31,39 @@ import {
 } from '@tanstack/react-table';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { parseAsInteger, useQueryState } from 'nuqs';
+import { useMemo } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalItems: number;
   pageSizeOptions?: number[];
+  goToNextPage: () => void;
+  goToPrevPage: () => void;
+  isLoading: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   totalItems,
-  pageSizeOptions = [10, 20, 30, 40, 50]
+  goToNextPage,
+  goToPrevPage,
+  isLoading,
+  pageSizeOptions = [10, 25, 50, 100]
 }: DataTableProps<TData, TValue>) {
+  const { size, setSize } = useDogTableFilters();
   const [currentPage, setCurrentPage] = useQueryState(
     'page',
     parseAsInteger.withOptions({ shallow: false }).withDefault(1)
   );
-  const [pageSize, setPageSize] = useQueryState(
-    'limit',
-    parseAsInteger
-      .withOptions({ shallow: false, history: 'push' })
-      .withDefault(10)
-  );
 
   const paginationState = {
-    pageIndex: currentPage - 1, // zero-based index for React Table
-    pageSize: pageSize
+    pageIndex: currentPage - 1,
+    pageSize: size
   };
 
-  const pageCount = Math.ceil(totalItems / pageSize);
+  const pageCount = Math.ceil(totalItems / size);
 
   const handlePaginationChange = (
     updaterOrValue:
@@ -72,14 +75,14 @@ export function DataTable<TData, TValue>({
         ? updaterOrValue(paginationState)
         : updaterOrValue;
 
-    setCurrentPage(pagination.pageIndex + 1); // converting zero-based index to one-based
-    setPageSize(pagination.pageSize);
+    setCurrentPage(pagination.pageIndex + 1);
+    setSize(pagination.pageSize);
   };
-
+  const currentData = useMemo(() => data, [data, isLoading]);
   const table = useReactTable({
-    data,
+    data: currentData,
     columns,
-    pageCount: pageCount,
+    pageCount,
     state: {
       pagination: paginationState
     },
@@ -113,7 +116,8 @@ export function DataTable<TData, TValue>({
                 ))}
               </TableHeader>
               <TableBody>
-                {table.getRowModel().rows?.length ? (
+                {/* Show current data while loading */}
+                {table.getRowModel().rows?.length || isLoading ? (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
@@ -139,6 +143,7 @@ export function DataTable<TData, TValue>({
                     </TableCell>
                   </TableRow>
                 )}
+                {/* Show loading overlay */}
               </TableBody>
             </Table>
             <ScrollBar orientation='horizontal' />
@@ -171,16 +176,18 @@ export function DataTable<TData, TValue>({
               <Select
                 value={`${paginationState.pageSize}`}
                 onValueChange={(value) => {
+                  if (isLoading) return;
                   table.setPageSize(Number(value));
                 }}
+                disabled={isLoading}
               >
                 <SelectTrigger className='h-8 w-[70px]'>
                   <SelectValue placeholder={paginationState.pageSize} />
                 </SelectTrigger>
                 <SelectContent side='top'>
-                  {pageSizeOptions.map((pageSize) => (
-                    <SelectItem key={pageSize} value={`${pageSize}`}>
-                      {pageSize}
+                  {pageSizeOptions.map((size) => (
+                    <SelectItem key={size} value={`${size}`}>
+                      {size}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -200,20 +207,13 @@ export function DataTable<TData, TValue>({
           </div>
           <div className='flex items-center space-x-2'>
             <Button
-              aria-label='Go to first page'
-              variant='outline'
-              className='hidden h-8 w-8 p-0 lg:flex'
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <DoubleArrowLeftIcon className='h-4 w-4' aria-hidden='true' />
-            </Button>
-            <Button
               aria-label='Go to previous page'
               variant='outline'
               className='h-8 w-8 p-0'
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={() => {
+                if (!isLoading) goToPrevPage();
+              }}
+              disabled={isLoading}
             >
               <ChevronLeftIcon className='h-4 w-4' aria-hidden='true' />
             </Button>
@@ -221,19 +221,12 @@ export function DataTable<TData, TValue>({
               aria-label='Go to next page'
               variant='outline'
               className='h-8 w-8 p-0'
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={() => {
+                if (!isLoading) goToNextPage();
+              }}
+              disabled={isLoading}
             >
               <ChevronRightIcon className='h-4 w-4' aria-hidden='true' />
-            </Button>
-            <Button
-              aria-label='Go to last page'
-              variant='outline'
-              className='hidden h-8 w-8 p-0 lg:flex'
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              <DoubleArrowRightIcon className='h-4 w-4' aria-hidden='true' />
             </Button>
           </div>
         </div>
