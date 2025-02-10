@@ -35,10 +35,12 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui/tooltip';
+import TableViewToggleButton from '@/components/table-view-toggle-btn';
+import DogCard from '@/components/ui/cards/dog-card';
 
 export default function DogTableContainer() {
   let animationInterval: NodeJS.Timeout | null = null;
-
+  const [isTableView, setIsTableView] = useState(false);
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
   const [isMatching, setIsMatching] = useState(false);
   const [finalMatch, setFinalMatch] = useState<Dog | undefined | null>(null);
@@ -152,6 +154,10 @@ export default function DogTableContainer() {
         <DataTableResetFilter
           isFilterActive={isAnyFilterActive}
           onReset={resetFilters}
+        />
+        <TableViewToggleButton
+          tableView={isTableView}
+          setTableView={setIsTableView}
         />
         <div className='relative ml-auto flex h-full gap-3 pr-4'>
           {favorites.length > 0 && (
@@ -368,6 +374,7 @@ export default function DogTableContainer() {
         goToPrevPage={goToPrevPage}
         goToNextPage={goToNextPage}
         isLoading={isLoadingDogs || isLoadingIds}
+        isTableView={isTableView}
       />
     </>
   );

@@ -32,6 +32,7 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { useMemo } from 'react';
+import DogCard from '../cards/dog-card';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,15 +42,17 @@ interface DataTableProps<TData, TValue> {
   goToNextPage: () => void;
   goToPrevPage: () => void;
   isLoading: boolean;
+  isTableView?: boolean;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends Dog, TValue>({
   columns,
   data,
   totalItems,
   goToNextPage,
   goToPrevPage,
   isLoading,
+  isTableView,
   pageSizeOptions = [10, 25, 50, 100]
 }: DataTableProps<TData, TValue>) {
   const { size, setSize } = useDogTableFilters();
@@ -98,54 +101,64 @@ export function DataTable<TData, TValue>({
       <div className='relative flex flex-1'>
         <div className='absolute bottom-0 left-0 right-0 top-0 flex overflow-scroll rounded-md border md:overflow-auto'>
           <ScrollArea className='flex-1'>
-            <Table className='relative'>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {/* Show current data while loading */}
-                {table.getRowModel().rows?.length || isLoading ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && 'selected'}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
+            {!isTableView ? (
+              <Table className='relative'>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <TableHead key={header.id}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </TableHead>
                       ))}
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className='h-24 text-center'
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-                {/* Show loading overlay */}
-              </TableBody>
-            </Table>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {/* Show current data while loading */}
+                  {table.getRowModel().rows?.length || isLoading ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && 'selected'}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className='h-24 text-center'
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {/* Show loading overlay */}
+                </TableBody>
+              </Table>
+            ) : (
+              <>
+                <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+                  {data.map((dog) => (
+                    <DogCard key={dog.id} dog={dog} />
+                  ))}
+                </div>
+              </>
+            )}
             <ScrollBar orientation='horizontal' />
           </ScrollArea>
         </div>
