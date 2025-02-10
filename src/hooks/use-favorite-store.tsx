@@ -2,6 +2,8 @@ import { Dog } from 'types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+const MAX_ITEMS = 100;
+
 interface FavoritesState {
   favorites: Dog[];
   matches: Dog[];
@@ -22,12 +24,15 @@ export const useFavorites = create<FavoritesState>()(
       addOrUpdateFavorite: (dog) =>
         set((state) => {
           const index = state.favorites.findIndex((fav) => fav.id === dog.id);
-          const newFavorites = [...state.favorites];
+          let newFavorites = [...state.favorites];
 
           if (index >= 0) {
             newFavorites[index] = dog;
           } else {
             newFavorites.push(dog);
+            if (newFavorites.length > MAX_ITEMS) {
+              newFavorites.shift(); // Remove oldest item if limit exceeded
+            }
           }
 
           return { favorites: newFavorites };
@@ -41,7 +46,11 @@ export const useFavorites = create<FavoritesState>()(
       addMatch: (dog) =>
         set((state) => {
           if (!state.matches.some((match) => match.id === dog.id)) {
-            return { matches: [...state.matches, dog] };
+            const newMatches = [...state.matches, dog];
+            if (newMatches.length > MAX_ITEMS) {
+              newMatches.shift(); // Remove oldest match if limit exceeded
+            }
+            return { matches: newMatches };
           }
           return state;
         }),
