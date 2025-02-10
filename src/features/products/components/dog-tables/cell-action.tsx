@@ -13,6 +13,7 @@ import { useFavorites } from '@/hooks/use-favorite-store';
 import { Edit, Heart, MoreHorizontal, Star, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { Dog } from 'types';
 
 interface CellActionProps {
@@ -30,8 +31,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     setIsFavorite(!isFavorite);
     if (isFavorite) {
       deleteFavorite(data.id);
+      toast.success(`${data.name} removed from favorites`);
     } else {
       addOrUpdateFavorite(data);
+      toast.success(`${data.name} added to favorites`);
     }
   };
 

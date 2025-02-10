@@ -37,6 +37,7 @@ import {
 } from '@/components/ui/tooltip';
 import TableViewToggleButton from '@/components/table-view-toggle-btn';
 import DogCard from '@/components/ui/cards/dog-card';
+import { toast } from 'sonner';
 
 export default function DogTableContainer() {
   let animationInterval: NodeJS.Timeout | null = null;
@@ -212,7 +213,10 @@ export default function DogTableContainer() {
                   {finalMatch && (
                     <Button
                       onClick={() => {
-                        addMatch(finalMatch), close();
+                        addMatch(finalMatch),
+                          toast.success(
+                            `${finalMatch.name} saved to your matches`
+                          );
                       }}
                     >
                       Save Match
@@ -270,7 +274,9 @@ export default function DogTableContainer() {
 
                         <Button
                           variant='outline'
-                          onClick={() => deleteFavorite(dog.id)}
+                          onClick={() => {
+                            deleteFavorite(dog.id);
+                          }}
                         >
                           <Trash2 size={16} />
                         </Button>
