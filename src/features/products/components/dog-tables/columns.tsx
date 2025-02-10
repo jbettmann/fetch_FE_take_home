@@ -38,7 +38,7 @@ export const columns: ColumnDef<Dog>[] = [
   },
   {
     accessorKey: 'age',
-    header: 'AGE'
+    header: 'AGE (YEARS)'
   },
   {
     accessorKey: 'zip_code',

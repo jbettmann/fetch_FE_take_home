@@ -41,7 +41,7 @@ import { toast } from 'sonner';
 
 export default function DogTableContainer() {
   let animationInterval: NodeJS.Timeout | null = null;
-  const [isTableView, setIsTableView] = useState(false);
+  const [isTableView, setIsTableView] = useState(true);
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
   const [isMatching, setIsMatching] = useState(false);
   const [finalMatch, setFinalMatch] = useState<Dog | undefined | null>(null);
