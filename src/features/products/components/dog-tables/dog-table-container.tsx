@@ -258,7 +258,7 @@ export default function DogTableContainer() {
                         key={dog.id}
                         className='flex items-center justify-between'
                       >
-                        <div className='flex flex-col items-center space-x-2 text-sm'>
+                        <div className='flex min-w-16 flex-col items-center space-x-2 text-sm'>
                           <img
                             src={dog.img}
                             alt={dog.name}
@@ -266,7 +266,7 @@ export default function DogTableContainer() {
                           />
                           <span>{dog.name}</span>
                         </div>
-                        <div className='flex flex-col items-center space-x-2 text-xs'>
+                        <div className='flex max-w-20 flex-col items-center space-x-2 text-wrap text-xs'>
                           <span>Age {dog.age}</span>
 
                           <span>{dog.breed}</span>
@@ -332,7 +332,7 @@ export default function DogTableContainer() {
                         key={dog.id}
                         className='flex items-center justify-between'
                       >
-                        <div className='flex flex-col items-center space-x-2 text-sm'>
+                        <div className='flex min-w-16 flex-col items-center space-x-2 text-sm'>
                           <img
                             src={dog.img}
                             alt={dog.name}
@@ -340,7 +340,7 @@ export default function DogTableContainer() {
                           />
                           <span>{dog.name}</span>
                         </div>
-                        <div className='flex flex-col items-center space-x-2 text-xs'>
+                        <div className='flex max-w-20 flex-col items-center space-x-2 text-wrap text-xs'>
                           <span>Age {dog.age}</span>
 
                           <span>{dog.breed}</span>
