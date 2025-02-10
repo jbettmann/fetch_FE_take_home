@@ -13,7 +13,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { signOut, useSession } from 'next-auth/react';
 export function UserNav() {
-  const session = null;
+  const session = {
+    user: {
+      name: 'John Doe',
+      email: 'john.doe@gamil.com',
+      image: ' https://i.prntscr.com/4j4x6vQqQYy3.jpg'
+    }
+  };
   if (session) {
     return (
       <DropdownMenu>

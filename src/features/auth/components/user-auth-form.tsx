@@ -10,9 +10,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useTransition } from 'react';
+import { Suspense, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -24,15 +23,17 @@ const formSchema = z.object({
 
 type UserFormValue = z.infer<typeof formSchema>;
 
-export default function UserAuthForm() {
-  const searchParams = useSearchParams();
+function UserAuthFormContent() {
+  const searchParams = useSearchParams(); // ✅ Moved inside Suspense-wrapped component
   const router = useRouter();
   const callbackUrl = searchParams.get('callbackUrl');
   const [loading, startTransition] = useTransition();
+
   const defaultValues = {
-    name: undefined,
+    name: '',
     email: 'fetch_favorite360@gmail.com'
   };
+
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues
@@ -50,7 +51,7 @@ export default function UserAuthForm() {
             credentials: 'include'
           }
         );
-        console.log('res', res);
+
         if (res.ok) {
           return user;
         }
@@ -73,53 +74,56 @@ export default function UserAuthForm() {
   };
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='w-full space-y-2'
-        >
-          <FormField
-            control={form.control}
-            name='name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder='Enter your name...'
-                    disabled={loading}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type='email'
-                    placeholder='Enter your email...'
-                    disabled={loading}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='w-full space-y-2'>
+        <FormField
+          control={form.control}
+          name='name'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder='Enter your name...'
+                  disabled={loading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='email'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  type='email'
+                  placeholder='Enter your email...'
+                  disabled={loading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <Button disabled={loading} className='ml-auto w-full' type='submit'>
-            Login
-          </Button>
-        </form>
-      </Form>
-    </>
+        <Button disabled={loading} className='ml-auto w-full' type='submit'>
+          Login
+        </Button>
+      </form>
+    </Form>
+  );
+}
+
+export default function UserAuthForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UserAuthFormContent />
+    </Suspense>
   );
 }

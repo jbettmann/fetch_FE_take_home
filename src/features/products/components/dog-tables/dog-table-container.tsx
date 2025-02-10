@@ -103,9 +103,6 @@ export default function DogTableContainer() {
     isError: isErrorDogs
   } = useDogsByIds(dogIds);
 
-  // if (isLoadingDogs || isLoadingIds) return <p>Loading...</p>;
-  if (isErrorDogs || isErrorIds) return <p>Error fetching dogs.</p>;
-
   const startMatchingAnimation = () => {
     if (favorites.length === 0) return;
 
@@ -133,6 +130,8 @@ export default function DogTableContainer() {
     stopMatchingAnimation(match?.match || undefined);
   };
 
+  if (isLoadingDogs || isLoadingIds) return <p>Loading...</p>;
+  if (isErrorDogs || isErrorIds) return <p>Error fetching dogs.</p>;
   return (
     <>
       <div className='flex flex-wrap items-center gap-4'>

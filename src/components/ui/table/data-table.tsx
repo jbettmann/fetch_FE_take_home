@@ -33,6 +33,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { useMemo } from 'react';
 import DogCard from '../cards/dog-card';
+import { Dog } from 'types';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
