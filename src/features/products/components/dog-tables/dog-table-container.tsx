@@ -230,21 +230,21 @@ export default function DogTableContainer() {
 
           <Popover>
             <PopoverTrigger asChild>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className='relative hover:cursor-pointer'>
-                    <Heart className={`fill-primary text-primary`} size={30} />
-                    {favorites.length ? (
-                      <div className='absolute -right-2 -top-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white'>
-                        {favorites.length}
-                      </div>
-                    ) : null}
+              <div className='relative hover:cursor-pointer'>
+                {favorites.length ? (
+                  <div className='absolute -right-2 -top-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white'>
+                    {favorites.length}
                   </div>
-                </TooltipTrigger>
-                <TooltipContent side='bottom' align='center'>
-                  Favorite Pups
-                </TooltipContent>
-              </Tooltip>
+                ) : null}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Heart className={`fill-primary text-primary`} size={30} />
+                  </TooltipTrigger>
+                  <TooltipContent side='bottom' align='center'>
+                    Favorite Pups
+                  </TooltipContent>
+                </Tooltip>
+              </div>
             </PopoverTrigger>
 
             <PopoverContent className='w-80'>
@@ -301,24 +301,24 @@ export default function DogTableContainer() {
           {/* Matches */}
           <Popover>
             <PopoverTrigger asChild>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className='relative hover:cursor-pointer'>
-                    {matches.length ? (
-                      <div className='absolute -right-2 -top-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white'>
-                        {matches.length}
-                      </div>
-                    ) : null}
+              <div className='relative hover:cursor-pointer'>
+                {matches.length ? (
+                  <div className='absolute -right-2 -top-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white'>
+                    {matches.length}
+                  </div>
+                ) : null}
+                <Tooltip>
+                  <TooltipTrigger asChild>
                     <PawPrint
                       className={`fill-primary text-primary`}
                       size={30}
                     />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side='bottom' align='center'>
-                  Saved Matches
-                </TooltipContent>
-              </Tooltip>
+                  </TooltipTrigger>
+                  <TooltipContent side='bottom' align='center'>
+                    Saved Matches
+                  </TooltipContent>
+                </Tooltip>
+              </div>
             </PopoverTrigger>
 
             <PopoverContent className='w-80'>
