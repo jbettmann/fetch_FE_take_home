@@ -43,9 +43,10 @@ import {
 import { signOut, useSession } from 'next-auth/react';
 import { signOut as actionSignOut } from '@/services/auth/signOut';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
+import { useRouter } from 'next/navigation';
 
 export const company = {
   name: 'Acme Inc',
