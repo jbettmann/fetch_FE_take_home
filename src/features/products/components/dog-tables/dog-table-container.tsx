@@ -131,8 +131,9 @@ export default function DogTableContainer() {
     stopMatchingAnimation(match?.match || undefined);
   };
 
-  if (isLoadingDogs || isLoadingIds) return <p>Loading...</p>;
   if (isErrorDogs || isErrorIds) return <p>Error fetching dogs.</p>;
+  if (isLoadingDogs || isLoadingIds) return <p>Loading...</p>;
+
   return (
     <>
       <div className='flex flex-wrap items-center gap-4'>
@@ -266,7 +267,7 @@ export default function DogTableContainer() {
                           />
                           <span>{dog.name}</span>
                         </div>
-                        <div className='flex max-w-20 flex-col items-center space-x-2 text-wrap text-xs'>
+                        <div className='flex max-w-20 flex-col items-center text-wrap text-xs'>
                           <span>Age {dog.age}</span>
 
                           <span>{dog.breed}</span>
@@ -340,7 +341,7 @@ export default function DogTableContainer() {
                           />
                           <span>{dog.name}</span>
                         </div>
-                        <div className='flex max-w-20 flex-col items-center space-x-2 text-wrap text-xs'>
+                        <div className='flex max-w-20 flex-col items-center text-wrap text-xs'>
                           <span>Age {dog.age}</span>
 
                           <span>{dog.breed}</span>

@@ -30,9 +30,9 @@ const DogCard = ({ dog }: Props) => {
         <CardTitle className='text-2xl font-bold'>
           {dog.name}
 
-          <h6 className='text-left text-base text-gray-500 dark:text-gray-400'>
+          <p className='text-left text-base text-gray-500 dark:text-gray-400'>
             {dog.breed}
-          </h6>
+          </p>
           <Card className='my-4 flex w-full items-center justify-between p-2'>
             <div className='flex-1 text-center text-base font-bold'>
               {dog.age}
